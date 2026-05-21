@@ -24,4 +24,18 @@ Download from https://python.org. During install, check **"Add Python to PATH"**
 Download from https://ollama.com then run:
 ```bash
 ollama pull tinyllama
+```
+
+**2. Install Python packages**
+```bash
+pip install gradio
+```
+Web UI - recommended:
+```bash
+python python/app.py
+```
+Then open http://127.0.0.1:7860. For a public link, set share=True in app.py.
+CLI version - terminal only:
+```bash
+python python/test.py
 
