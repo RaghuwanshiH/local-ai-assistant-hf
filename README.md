@@ -16,21 +16,16 @@ https://huggingface.co/spaces/HarshRaghuwanshi/python
 - **Runs on CPU** - works anywhere, no GPU needed
 
 ### Tech Stack:
-Python, Gradio, TinyLlama 1.1B, Hugging Face Spaces
+Python, Gradio, Transformers, TinyLlama 1.1B, Hugging Face Spaces
 
 ### Run it locally:
 
-**0. Install Python 3.10+** 
+**1. Install Python 3.10+** 
 Download from https://python.org. During install, check **"Add Python to PATH"**.
 
-**1. Install Ollama + download model** 
-Download from https://ollama.com then run:
-```bash
-ollama pull tinyllama
-```
 **2. Install Python packages**
 ```bash
-pip install gradio
+pip install -r python/requirements.txt
 ```
 Web UI - recommended:
 ```bash
