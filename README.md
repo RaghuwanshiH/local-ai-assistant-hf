@@ -50,7 +50,8 @@ python python/test.py
 
 ### Want 10x faster responses?
 I also built a GPU-accelerated version using Phi-3 3.8B + RTX 3050:
-→ local-ai-assistant-phi3
+→ [local-ai-assistant-phi3](https://github.com/RaghuwanshiH/local-ai-assistant-phi3)
+
 **Built with ❤️ to prove AI doesn't need the cloud**
 
 
