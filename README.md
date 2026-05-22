@@ -44,19 +44,13 @@ python python/test.py
 ```
 
 ### Features:
-- Chat with local LLM through terminal or browser
-- One-click launcher with `run.bat`
-- Public sharing via Gradio links
+- Chat with local LLM through browser
+- -Public sharing via HF Spaces
 - Fully offline after setup
 
-### How to get a public link:
-In `python/app.py`, change the last line to:
-```python
-demo.launch(share=True)
-```
-Restart the app and you'll get a https://xxxx.gradio.live link.
-
----
+### Want 10x faster responses?
+I also built a GPU-accelerated version using Phi-3 3.8B + RTX 3050:
+→ local-ai-assistant-phi3
 **Built with ❤️ to prove AI doesn't need the cloud**
 
 
