@@ -1,62 +1,53 @@
-import gradio as gr
-import ollama
+import re
 
-def extract_text(msg_content):
-    if isinstance(msg_content, list) and len(msg_content) > 0:
-        return msg_content[0].get('text', '')
-    return str(msg_content)
-
-def chat(message, history):
-    messages = [
-        {
-            "role": "system",
-            "content": "You are a casual chatbot. Reply like a friend texting. NEVER explain, translate, or add notes. NEVER use parentheses for translations. Match the user's language. If user says 'bro', reply 'Bro! Kya haal?' Keep replies under 2 lines. No essays. Be direct."
-        }
-    ]
-
-    for msg in history:
-        content = extract_text(msg['content'])
-        messages.append({"role": msg['role'], "content": content})
-
-    messages.append({"role": "user", "content": message})
-
+def chat_with_ollama(message, history):
+    result = subprocess.run(
+        ["ollama", "run", "tinyllama", message], 
+        capture_output=True,
+        text=False
+    )
+    # Decode + strip ALL ANSI escape codes
+    text = result.stdout.decode('utf-8', errors='ignore')
+    clean_output = re.sub(r'\x1b\[[0-9;]*[mGKHABCD]', '', text)
+    clean_output = re.sub(r'\r', '', clean_output) # Remove carriage returns
+    return clean_output.strip()
     try:
-        response = ollama.chat(
-            model='phi3:mini',
-            messages=messages,
-            stream=False,
-            options={
-                "temperature": 0.7,
-                "num_predict": 100,
-                "stop": ["User:", "Assistant:"]
-            }
+        result = subprocess.run(
+            ["ollama", "run", "tinyllama", message],
+            capture_output=True,
+            text=False,
+            timeout=120
         )
-        return response['message']['content'].strip()
+        text = result.stdout.decode('utf-8', errors='ignore')
+        clean_output = re.sub(r'\x1b\[[0-9;]*[mGKHABCD]', '', text)
+        clean_output = re.sub(r'\r', '', clean_output).strip()
+
+        if not clean_output:
+            return "Ollama didn't respond. Is it running? Check terminal."
+
+        return clean_output
+
+demo = gr.ChatInterface(
+    fn=chat_with_ollama,
+    title="Local AI Assistant 🔒",
+    description="100% Offline ChatGPT build by Harsh Raghuwanshi - Zero API costs. Powered by TinyLama"
+)
+    except subprocess.TimeoutExpired:
+        return "TinyLlama took too long. Try a shorter question."
+    except FileNotFoundError:
+        return "Error: Ollama not found. Make sure 'ollama' is in your PATH."
     except Exception as e:
         return f"Error: {str(e)}"
 
-with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    gr.Markdown("# 🤖 MaNe Offline AI Assistant")
-    gr.Markdown("**Model:** Microsoft Phi-3 3.8B | **Backend:** Ollama + RTX 3050 | **100% Local**")
-    gr.Markdown("*Built by Harsh Raghuwanshi*")
+with gr.Blocks(title="Local AI") as demo:
+    gr.Markdown("# 🤖 Local AI Assistant 🔒")
+    gr.Markdown("**100% Offline ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**")
 
-    chatbot = gr.Chatbot(height=500, label="Chat with Phi-3")
-    msg = gr.Textbox(label="Your Message", placeholder="Ask me anything...")
+    gr.ChatInterface(
+        fn=chat_with_ollama,
+        examples=["Explain Python in simple terms", "Write a haiku about coding", "What's 15% of 80?"],
+    )
 
-    with gr.Row():
-        submit = gr.Button("Send", variant="primary")
-        clear = gr.ClearButton([msg, chatbot], value="Clear")
-
-    def respond(message, chat_history):
-        if not message.strip():
-            return "", chat_history
-        bot_message = chat(message, chat_history)
-        chat_history.append({"role": "user", "content": message})
-        chat_history.append({"role": "assistant", "content": bot_message})
-        return "", chat_history
-
-    msg.submit(respond, [msg, chatbot], [msg, chatbot])
-    submit.click(respond, [msg, chatbot], [msg, chatbot])
-
+demo.launch(share=True)
 if __name__ == "__main__":
     demo.launch(share=True)
