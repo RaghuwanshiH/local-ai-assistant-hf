@@ -1,16 +1,16 @@
 @echo off
-echo Starting TinyLlama 1.1B CPU version...
+title Local AI Assistant - HF Version
+echo ================================
+echo  TinyLlama 1.1B - Transformers
+echo ================================
+echo.
 
-echo Choose mode:
-echo 1. Web UI  
-echo 2. CLI Terminal
-set /p choice="Enter 1 or 2: "
+echo Installing requirements...
+pip install -r python/requirements.txt
 
-if "%choice%"=="1" (
-    python python/app.py
-) else if "%choice%"=="2" (
-    python python/app.py --cli
-) else (
-    echo Invalid choice
-    pause
-)
+echo.
+echo Starting Web UI at http://127.0.0.1:7860
+echo First run downloads ~2GB model - be patient
+python python/app.py
+
+pause
