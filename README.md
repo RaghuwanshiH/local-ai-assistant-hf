@@ -1,24 +1,22 @@
-# Local AI Assistant
+# Local AI Assistant - Cloud Version
 
-## 🚀 Live Demo
+### ☁️ Runs 24/7 on Hugging Face Spaces
 
- **1. Permanent Cloud Link - 24/7:**   https://huggingface.co/spaces/HarshRaghuwanshi/python  
-*Runs TinyLlama 1.1B on Hugging Face CPU. Always online.*
+Offline ChatGPT clone using TinyLlama 1.1B. No API keys, no cost, always online.
 
-**2. Temporary GPU Link:** https://301ff5f802a78f1822.gradio.live  
-*Faster demo, but only works when my laptop is running. Last updated: 2026-05-21*
+### 🚀 Live Demo
+https://huggingface.co/spaces/HarshRaghuwanshi/python
+
 ![Demo](demo.png)
-
-Offline ChatGPT clone running 100% on your laptop using Ollama + Python + Gradio.
 
 ### Why this is cool:
 - **Zero API costs** - no OpenAI key needed
-- **Works without internet** - AI runs locally on your CPU
-- **Full privacy** - your data never leaves your machine
-- **Two versions** - CLI for speed, Web UI for sharing
+- **Always online** - hosted free on HF Spaces  
+- **Full privacy** - your data never leaves the container
+- **Runs on CPU** - works anywhere, no GPU needed
 
 ### Tech Stack:
-Python, Ollama, TinyLlama, Gradio
+Python, Gradio, TinyLlama, Hugging Face Spaces
 
 ### Run it locally:
 
