@@ -36,8 +36,6 @@ Web UI - recommended:
 ```bash
 python python/app.py
 ```
-Then open http://127.0.0.1:7860. For a public link, set share=True in app.py.
-
 **CLI version - terminal only:**
 ```bash
 python python/test.py
