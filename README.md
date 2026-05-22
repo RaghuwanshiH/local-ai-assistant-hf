@@ -34,11 +34,11 @@ pip install gradio
 ```
 Web UI - recommended:
 ```bash
-python/app.py
+python python/app.py
 ```
 **CLI version - terminal only:**
 ```bash
-python/test.py
+python python/test.py
 ```
 
 ### Features:
