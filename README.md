@@ -1,8 +1,12 @@
 # Local AI Assistant
 
-## 🚀 Live Demo 
- https://301ff5f802a78f1822.gradio.live
-*Link works only when my laptop is running. Last updated: 2026-05-21*
+## 🚀 Live Demo
+
+ **1. Permanent Cloud Link - 24/7:**   https://huggingface.co/spaces/HarshRaghuwanshi/python  
+*Runs TinyLlama 1.1B on Hugging Face CPU. Always online.*
+
+**2. Temporary GPU Link:** https://301ff5f802a78f1822.gradio.live  
+*Faster demo, but only works when my laptop is running. Last updated: 2026-05-21*
 ![Demo](demo.png)
 
 Offline ChatGPT clone running 100% on your laptop using Ollama + Python + Gradio.
