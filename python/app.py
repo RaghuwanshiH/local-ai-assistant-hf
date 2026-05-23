@@ -50,14 +50,3 @@ else:
             return "Error: Ollama not found. Make sure 'ollama' is in your PATH."
         except Exception as e:
             return f"Error: {str(e)}"
-
-# Same UI for both
-with gr.Blocks(title="Local AI") as demo:
-    gr.Markdown("# 🤖 Local AI Assistant 🔒")
-    gr.Markdown("**100% Free ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**")
-    gr.ChatInterface(
-        fn=chat,
-        examples=["Explain Python in simple terms", "Write a haiku about coding", "What's 15% of 80"],
-    )
-
-demo.launch(share=True)
