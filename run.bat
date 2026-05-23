@@ -40,12 +40,15 @@ set /p choice="Enter 1 or 2: "
 
 if "%choice%"=="1" (
     echo.
-    echo Starting Web UI...
-    echo Opening http://127.0.0.1:7860 in your browser
-    echo Press Ctrl+C here to stop the server
+    echo Starting Web UI... Loading model, this may take 30 seconds
+    echo Browser will open once server is ready
     echo.
+    start /B python python/app.py
+    timeout /t 15 /nobreak >nul
     start http://127.0.0.1:7860
-    python python/app.py
+    echo.
+    echo Server running. Press Ctrl+C in this window to stop.
+    pause >nul
 ) else if "%choice%"=="2" (
     echo.
     echo Starting CLI chat... Type 'exit' to quit
@@ -56,5 +59,3 @@ if "%choice%"=="1" (
     pause
     exit /b
 )
-
-pause
