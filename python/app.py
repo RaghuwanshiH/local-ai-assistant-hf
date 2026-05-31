@@ -53,7 +53,7 @@ else:
 
 # Same UI for both
 with gr.Blocks(title="Local AI") as demo:
-    gr.Markdown("# 🤖 Local AI Assistant 🔒")
+    gr.Markdown("# 🤖 JARVIS-Lite Offline AI Assistant 🔒")
     gr.Markdown("**100% Free ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**")
     gr.ChatInterface(
         fn=chat,
