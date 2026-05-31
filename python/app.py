@@ -2,12 +2,11 @@ import gradio as gr
 import os
 import subprocess
 import re
+import gc
 
-# Check if we're on Hugging Face Spaces
 IS_HF = os.getenv("SPACE_ID") is not None
 
 if IS_HF:
-    # CODE FOR HUGGING FACE - uses transformers directly
     from transformers import AutoTokenizer, AutoModelForCausalLM
     import torch
 
@@ -19,24 +18,19 @@ if IS_HF:
     )
 
     def chat(message, history):
-        # Fix 1: Limit history to prevent OOM on 2nd question
-        if len(history) > 1:
-            history = history[-1:]
-
-        messages = []
-        for user_msg, bot_msg in history:
-            messages.append({"role": "user", "content": user_msg})
-            messages.append({"role": "assistant", "content": bot_msg})
-        messages.append({"role": "user", "content": message})
+        # Fix 1: History poori clear. Sirf current message bhejo.
+        # HF free tier pe chat memory afford nahi kar sakta
+        messages = [{"role": "user", "content": message}]
 
         prompt = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
         inputs = tokenizer(prompt, return_tensors="pt").to("cpu")
 
+        # Fix 2: Tokens kam karo HF ke liye
         outputs = model.generate(
             **inputs,
-            max_new_tokens=150,
+            max_new_tokens=80,  # 150 se 80 kiya
             do_sample=True,
             temperature=0.7,
             pad_token_id=tokenizer.eos_token_id,
@@ -45,14 +39,15 @@ if IS_HF:
             outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
-        # Fix 2: Memory cleanup
-        del inputs, outputs
+        # Fix 3: Aggressive memory cleanup
+        del inputs, outputs, prompt, messages
+        gc.collect()
         torch.cuda.empty_cache()
 
         return response.strip()
 
 else:
-    # CODE FOR YOUR LOCAL PC - uses Ollama
+
     def chat(message, history):
         try:
             result = subprocess.run(
@@ -75,20 +70,29 @@ else:
             return f"Error: {str(e)}"
 
 
-# Fix 3: Gradio 3.x compatible - removed theme, clear_btn, server_port
-demo = gr.ChatInterface(
-    fn=chat,
-    title="🤖 JARVIS-Lite Offline AI Assistant 🔒",
-    description="**100% Free ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**",
-    examples=[
-        "Explain Python in simple terms",
-        "Write a haiku about coding",
-        "What's 15% of 80",
-    ],
-)
-
-# Fix 4: Auto port for local to avoid OSError
 if IS_HF:
+    css = ".gradio-container {max-width: 700px!important; margin: auto!important} footer {display: none!important}"
+    demo = gr.ChatInterface(
+        fn=chat,
+        title="🤖 JARVIS-Lite Offline AI Assistant 🔒",
+        description="**100% Free ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**",
+        examples=[
+            "Explain Python in simple terms",
+            "Write a haiku about coding",
+            "What's 15% of 80",
+        ],
+        css=css,
+    )
     demo.launch()
 else:
+    demo = gr.ChatInterface(
+        fn=chat,
+        title="🤖 JARVIS-Lite Offline AI Assistant 🔒",
+        description="**100% Free ChatGPT built by Harsh Raghuwanshi - Zero API costs. Powered by TinyLlama**",
+        examples=[
+            "Explain Python in simple terms",
+            "Write a haiku about coding",
+            "What's 15% of 80",
+        ],
+    )
     demo.launch(inbrowser=True, server_name="127.0.0.1", share=False)
